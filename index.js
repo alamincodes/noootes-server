@@ -55,6 +55,22 @@ async function run() {
       const result = await notesCollection.deleteOne(note);
       res.send(result);
     });
+    // edit note
+    app.put("/update-note/:id", async (req, res) => {
+      const id = req.params.id;
+      const updateNote = req.body;
+      const filter = { _id: new ObjectId(id) };
+      const option = { upsert: true };
+      const updateDoc = {
+        $set: {
+          // updateNote
+          title: updateNote.title,
+          note: updateNote.note,
+        },
+      };
+      const result = await notesCollection.updateOne(filter, updateDoc, option);
+      res.send(result);
+    });
   } finally {
     // Ensures that the client will close when you finish/error
     // await client.close();
